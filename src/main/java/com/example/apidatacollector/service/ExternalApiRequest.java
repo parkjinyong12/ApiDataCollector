@@ -7,18 +7,18 @@ import java.util.Map;
 public class ExternalApiRequest {
 
     private final Map<String, String> headers;
-    private final Map<String, Object> body;
+    private final Object body;
 
-    public ExternalApiRequest(Map<String, String> headers, Map<String, Object> body) {
+    public ExternalApiRequest(Map<String, String> headers, Object body) {
         this.headers = toUnmodifiableMap(headers);
-        this.body = toUnmodifiableMap(body);
+        this.body = body;
     }
 
     public Map<String, String> getHeaders() {
         return headers;
     }
 
-    public Map<String, Object> getBody() {
+    public Object getBody() {
         return body;
     }
 

@@ -28,8 +28,7 @@ public class ExternalRecordController {
     public ResponseEntity<ExternalRecordResponse> fetchAndStore(@Valid @RequestBody FetchRequest request) {
         ExternalRecord record = externalRecordService.fetchAndStore(
                 request.getSource(),
-                request.getHeaders(),
-                request.getBody()
+                request.getRequest()
         );
         return ResponseEntity.ok(new ExternalRecordResponse(record));
     }

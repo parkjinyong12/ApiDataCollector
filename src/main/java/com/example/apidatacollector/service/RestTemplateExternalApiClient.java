@@ -13,7 +13,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
-
 @Component
 public class RestTemplateExternalApiClient implements ExternalApiClient {
 
@@ -30,6 +29,8 @@ public class RestTemplateExternalApiClient implements ExternalApiClient {
         Assert.notNull(request, "External API request must not be null");
 
         URI uri = buildUri();
+        Object requestBody = request.getBody() != null ? request.getBody() : Collections.emptyMap();
+
         RequestEntity<Object> requestEntity = RequestEntity
                 .post(uri)
                 .headers(headers -> {
@@ -44,7 +45,7 @@ public class RestTemplateExternalApiClient implements ExternalApiClient {
                         headers.set(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
                     }
                 })
-                .body(request.getBody().isEmpty() ? Collections.emptyMap() : request.getBody());
+                .body(requestBody);
 
         ResponseEntity<String> response = restTemplate.exchange(requestEntity, String.class);
         String body = response.getBody() != null ? response.getBody() : "";
