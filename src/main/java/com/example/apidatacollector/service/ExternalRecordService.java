@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -21,15 +22,20 @@ public class ExternalRecordService {
     }
 
     @Transactional
-    public ExternalRecord fetchAndStore(String source, Map<String, String> queryParameters) {
-        ExternalApiResponse response = externalApiClient.fetchData(queryParameters);
+    public ExternalRecord fetchAndStore(String source, Map<String, String> headers, Map<String, Object> body) {
+        Map<String, String> safeHeaders = headers != null ? headers : Collections.emptyMap();
+        Map<String, Object> safeBody = body != null ? body : Collections.emptyMap();
+
+        ExternalApiResponse response = externalApiClient.fetchData(new ExternalApiRequest(safeHeaders, safeBody));
+
+        String requestDetails = String.format("headers=%s, body=%s", safeHeaders, safeBody);
 
         ExternalRecord record = new ExternalRecord(
                 source,
                 response.getStatusCode(),
                 response.getBody(),
                 OffsetDateTime.now(),
-                queryParameters.toString()
+                requestDetails
         );
 
         return repository.save(record);
