@@ -34,9 +34,17 @@ dependencies {
 
     runtimeOnly("com.h2database:h2")
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(group = "org.mockito", module = "mockito-inline")
+    }
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    jvmArgs("-Djdk.instrument.traceUsage")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+
 }
